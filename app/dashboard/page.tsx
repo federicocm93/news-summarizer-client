@@ -1,0 +1,317 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Copy, Eye, EyeOff, User, Key, Package, BarChart3 } from "lucide-react"
+import { API_ENDPOINTS } from "@/config/api"
+
+interface UserData {
+  email: string
+  apiKey: string
+  subscriptionTier: "free" | "premium" | "pro"
+  requestsRemaining: number
+}
+
+export default function Dashboard() {
+  const router = useRouter()
+  const [userData, setUserData] = useState<UserData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [showApiKey, setShowApiKey] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    // This ensures the code only runs on the client side
+    if (typeof window !== "undefined") {
+      const fetchUserData = async () => {
+        setIsLoading(true)
+        setError(null)
+
+        const token = localStorage.getItem("authToken")
+        if (!token) {
+          router.push("/auth/login")
+          return
+        }
+
+        try {
+          const response = await fetch(API_ENDPOINTS.ME, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              localStorage.removeItem("authToken")
+              localStorage.removeItem("userData")
+              router.push("/auth/login")
+              return
+            }
+            throw new Error("Email or password is incorrect")
+          }
+
+          const responseData = await response.json()
+
+          // Check if the data is in the expected format
+          if (responseData.status === "success" && responseData.data) {
+            setUserData(responseData.data.user)
+            console.log("User data received:", responseData.data.user)
+          } else {
+            throw new Error("Invalid response format")
+          }
+        } catch (err) {
+          // Try to use cached user data if available
+          const cachedUserData = localStorage.getItem("userData")
+          if (cachedUserData) {
+            try {
+              const parsedData = JSON.parse(cachedUserData)
+              setUserData({
+                email: parsedData.email,
+                apiKey: parsedData.apiKey,
+                subscriptionTier: parsedData.subscriptionTier,
+                requestsRemaining: parsedData.requestsRemaining,
+              })
+              setError("Using cached data. Some information may not be up to date.")
+            } catch (parseError) {
+              setError(err instanceof Error ? err.message : "An error occurred")
+            }
+          } else {
+            setError(err instanceof Error ? err.message : "An error occurred")
+          }
+        } finally {
+          setIsLoading(false)
+        }
+      }
+
+      fetchUserData()
+    }
+  }, [router])
+
+  const copyApiKey = () => {
+    if (typeof window !== "undefined" && userData?.apiKey) {
+      navigator.clipboard.writeText(userData.apiKey)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authToken")
+      router.push("/")
+    }
+  }
+
+  const getSubscriptionColor = (tier: string) => {
+    switch (tier) {
+      case "premium":
+        return "text-blue-600 bg-blue-50"
+      case "pro":
+        return "text-[#ff5533] bg-orange-50"
+      default:
+        return "text-gray-600 bg-gray-50"
+    }
+  }
+
+  const getSubscriptionLabel = (tier: string) => {
+    switch (tier) {
+      case "premium":
+        return "Premium"
+      case "pro":
+        return "Pro"
+      default:
+        return "Free"
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0a1e3b] mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-[#0a1e3b]">Loading your dashboard...</h2>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <div className="bg-red-100 text-red-600 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="w-8 h-8"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-[#0a1e3b] mb-2">Error Loading Dashboard</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-block py-2 px-6 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+          <Link href="/">
+            <div className="w-48">
+              <img src="/images/tldr-news-logo.png" alt="TLDR News Logo" className="w-full h-auto" />
+            </div>
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="text-[#0a1e3b] hover:text-[#ff5533] transition-colors text-sm font-medium"
+          >
+            Log Out
+          </button>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-[#0a1e3b]">Your Dashboard</h1>
+          <p className="text-gray-600">Manage your TLDR News account and API key</p>
+        </div>
+
+        {userData && (
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-blue-50 p-2 rounded-full">
+                  <User className="h-5 w-5 text-blue-600" />
+                </div>
+                <h2 className="text-lg font-semibold text-[#0a1e3b]">Account</h2>
+              </div>
+              <div className="text-gray-700">{userData.email}</div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-purple-50 p-2 rounded-full">
+                  <Package className="h-5 w-5 text-purple-600" />
+                </div>
+                <h2 className="text-lg font-semibold text-[#0a1e3b]">Subscription</h2>
+              </div>
+              <div
+                className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getSubscriptionColor(
+                  userData.subscriptionTier,
+                )}`}
+              >
+                {getSubscriptionLabel(userData.subscriptionTier)}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-green-50 p-2 rounded-full">
+                  <BarChart3 className="h-5 w-5 text-green-600" />
+                </div>
+                <h2 className="text-lg font-semibold text-[#0a1e3b]">Usage</h2>
+              </div>
+              <div className="text-gray-700">
+                <span className="font-medium">
+                  {userData.requestsRemaining !== undefined ? userData.requestsRemaining : 0}
+                </span>{" "}
+                requests remaining
+              </div>
+            </div>
+          </div>
+        )}
+
+        {userData && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-amber-50 p-2 rounded-full">
+                <Key className="h-5 w-5 text-amber-600" />
+              </div>
+              <h2 className="text-lg font-semibold text-[#0a1e3b]">Your API Key</h2>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-gray-600 text-sm mb-4">
+                Use this API key to authenticate requests to the TLDR News API. Keep it secret and secure.
+              </p>
+
+              <div className="flex items-center">
+                <div className="relative flex-grow">
+                  <input
+                    type={showApiKey ? "text" : "password"}
+                    value={userData.apiKey}
+                    readOnly
+                    className="w-full px-3 py-2 border border-gray-300 rounded-l-md bg-gray-50 text-gray-700 font-mono text-sm"
+                  />
+                  <button
+                    onClick={() => setShowApiKey(!showApiKey)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    aria-label={showApiKey ? "Hide API key" : "Show API key"}
+                  >
+                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+                <button
+                  onClick={copyApiKey}
+                  className={`px-3 h-[42px] flex items-center justify-center border border-l-0 border-gray-300 rounded-r-md ${
+                    copied
+                      ? "bg-green-50 text-green-600 hover:bg-green-100"
+                      : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                  }`}
+                  aria-label="Copy API key"
+                >
+                  {copied ? "Copied!" : <Copy className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-md">
+              <h3 className="text-sm font-medium text-blue-800 mb-2">How to use your API key</h3>
+              <p className="text-sm text-blue-700 mb-3">
+                Include your API key in the headers of your requests to the TLDR News API:
+              </p>
+              <div className="bg-blue-100 p-3 rounded-md overflow-x-auto">
+                <pre className="text-xs text-blue-800 font-mono">
+                  {`Authorization: Bearer ${showApiKey ? userData.apiKey : "••••••••••••••••••••••••••••••••"}`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {userData && userData.subscriptionTier === "free" && (
+          <div className="bg-gradient-to-r from-[#0a1e3b] to-[#152d4a] rounded-lg p-6 text-white">
+            <h2 className="text-xl font-bold mb-2">Upgrade Your Plan</h2>
+            <p className="mb-4 opacity-90">
+              Get more article summaries and advanced features by upgrading to Premium or Pro.
+            </p>
+            <Link
+              href="/"
+              className="inline-block py-2 px-4 bg-[#ff5533] hover:bg-[#e64a2e] text-white font-medium rounded-md transition-colors"
+            >
+              View Plans
+            </Link>
+          </div>
+        )}
+      </main>
+
+      <footer className="border-t mt-12">
+        <div className="container mx-auto px-4 py-6 text-center text-[#0a1e3b] text-sm">
+          <p>© {new Date().getFullYear()} TLDR News. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  )
+}
