@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Copy, Eye, EyeOff, User, Key, Package, BarChart3 } from "lucide-react"
+import { Copy, Eye, EyeOff, User, Key, Package, BarChart3, Check } from "lucide-react"
 import { API_ENDPOINTS } from "@/config/api"
 
 interface UserData {
@@ -55,8 +55,7 @@ export default function Dashboard() {
 
           // Check if the data is in the expected format
           if (responseData.status === "success" && responseData.data) {
-            setUserData(responseData.data.user)
-            console.log("User data received:", responseData.data.user)
+            setUserData(responseData.data)
           } else {
             throw new Error("Invalid response format")
           }
@@ -253,7 +252,7 @@ export default function Dashboard() {
                     type={showApiKey ? "text" : "password"}
                     value={userData.apiKey}
                     readOnly
-                    className="w-full px-3 py-2 border border-gray-300 rounded-l-md bg-gray-50 text-gray-700 font-mono text-sm"
+                    className="w-full h-[42px] px-3 py-2 border border-gray-300 rounded-l-md bg-gray-50 text-gray-700 font-mono text-sm"
                   />
                   <button
                     onClick={() => setShowApiKey(!showApiKey)}
@@ -272,7 +271,7 @@ export default function Dashboard() {
                   }`}
                   aria-label="Copy API key"
                 >
-                  {copied ? "Copied!" : <Copy className="h-4 w-4" />}
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 </button>
               </div>
             </div>
@@ -280,13 +279,23 @@ export default function Dashboard() {
             <div className="bg-blue-50 p-4 rounded-md">
               <h3 className="text-sm font-medium text-blue-800 mb-2">How to use your API key</h3>
               <p className="text-sm text-blue-700 mb-3">
-                Include your API key in the headers of your requests to the TLDR News API:
+                Follow these steps to set up your TLDR News Extension:
               </p>
-              <div className="bg-blue-100 p-3 rounded-md overflow-x-auto">
-                <pre className="text-xs text-blue-800 font-mono">
-                  {`Authorization: Bearer ${showApiKey ? userData.apiKey : "••••••••••••••••••••••••••••••••"}`}
-                </pre>
+              <ol className="list-decimal list-inside text-sm text-blue-700 mb-4 space-y-2">
+                <li>Click the TLDR News extension icon in your browser toolbar</li>
+                <li>Go to "Settings"</li>
+                <li>Paste your API key in the input field as shown below:</li>
+              </ol>
+              <div className="bg-blue-100 rounded-lg border border-blue-200 p-4 mb-4">
+                <img 
+                  src="/images/api-key-example.png" 
+                  alt="API Key Input Screenshot" 
+                  className="w-full max-w-[300px] mx-auto rounded-lg shadow-sm"
+                />
               </div>
+              <p className="text-xs text-blue-600">
+                Your API key is stored locally and securely in your browser.
+              </p>
             </div>
           </div>
         )}
@@ -298,7 +307,7 @@ export default function Dashboard() {
               Get more article summaries and advanced features by upgrading to Premium or Pro.
             </p>
             <Link
-              href="/"
+              href="/dashboard/checkout"
               className="inline-block py-2 px-4 bg-[#ff5533] hover:bg-[#e64a2e] text-white font-medium rounded-md transition-colors"
             >
               View Plans

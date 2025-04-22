@@ -112,7 +112,7 @@ export default function HomePage() {
             </div>
 
             <Link
-              href="/auth/signup"
+              href={isLoggedIn ? "/dashboard/checkout" : "/auth/signup"}
               className="w-full py-2 px-4 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors text-center"
             >
               Subscribe Now
@@ -144,7 +144,7 @@ export default function HomePage() {
             </div>
 
             <Link
-              href="/auth/signup"
+              href={isLoggedIn ? "/dashboard/checkout" : "/auth/signup"}
               className="w-full py-2 px-4 bg-[#ff5533] hover:bg-[#e64a2e] text-white font-medium rounded-md transition-colors text-center"
             >
               Go Pro
