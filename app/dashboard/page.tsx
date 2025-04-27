@@ -229,21 +229,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {userData && userData.subscriptionTier === "free" && (
-            <div className="bg-gradient-to-r from-[#0a1e3b] to-[#152d4a] rounded-lg p-6 text-white">
-              <h2 className="text-xl font-bold mb-2">Upgrade Your Plan</h2>
-              <p className="mb-4 opacity-90">
-                Get more article summaries and advanced features by upgrading to Premium or Pro.
-              </p>
-              <Link
-                href="/dashboard/checkout"
-                className="inline-block py-2 px-4 bg-[#ff5533] hover:bg-[#e64a2e] text-white font-medium rounded-md transition-colors"
-              >
-                View Plans
-              </Link>
-            </div>
-            )}
-
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="bg-green-50 p-2 rounded-full">
@@ -258,6 +243,21 @@ export default function Dashboard() {
                 requests remaining
               </div>
             </div>
+          </div>
+        )}
+
+        {userData && userData.subscriptionTier === "free" && (
+          <div className="bg-gradient-to-r from-[#0a1e3b] to-[#152d4a] rounded-lg p-6 text-white">
+            <h2 className="text-xl font-bold mb-2">Upgrade Your Plan</h2>
+            <p className="mb-4 opacity-90">
+              Get more article summaries and advanced features by upgrading to Premium or Pro.
+            </p>
+            <Link
+              href="/dashboard/checkout"
+              className="inline-block py-2 px-4 bg-[#ff5533] hover:bg-[#e64a2e] text-white font-medium rounded-md transition-colors"
+            >
+              View Plans
+            </Link>
           </div>
         )}
 
