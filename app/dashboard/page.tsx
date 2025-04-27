@@ -76,6 +76,8 @@ export default function Dashboard() {
       channel.bind('new-subscription', async (data: { userId: string }) => {
         // Get the current user's ID from localStorage
         const storedUserData = localStorage.getItem("userData")
+        console.log("new-subscription event received", data)
+        console.log("storedUserData", storedUserData)
         if (storedUserData) {
           const currentUser = JSON.parse(storedUserData)
           // If the event is for the current user, update their data
