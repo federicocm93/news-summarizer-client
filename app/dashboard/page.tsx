@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Copy, Eye, EyeOff, User, Key, Package, BarChart3, Check } from "lucide-react"
 import { API_ENDPOINTS } from "@/config/api"
+import Pusher from 'pusher-js'
 
 interface UserData {
   email: string
@@ -21,71 +22,77 @@ export default function Dashboard() {
   const [showApiKey, setShowApiKey] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  useEffect(() => {
-    // This ensures the code only runs on the client side
-    if (typeof window !== "undefined") {
-      const fetchUserData = async () => {
-        setIsLoading(true)
-        setError(null)
+  const fetchUserData = async () => {
+    setIsLoading(true)
+    setError(null)
 
-        const token = localStorage.getItem("authToken")
-        if (!token) {
+    const token = localStorage.getItem("authToken")
+    if (!token) {
+      router.push("/auth/login")
+      return
+    }
+
+    try {
+      const response = await fetch(API_ENDPOINTS.ME, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem("authToken")
+          localStorage.removeItem("userData")
           router.push("/auth/login")
           return
         }
-
-        try {
-          const response = await fetch(API_ENDPOINTS.ME, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-
-          if (!response.ok) {
-            if (response.status === 401) {
-              localStorage.removeItem("authToken")
-              localStorage.removeItem("userData")
-              router.push("/auth/login")
-              return
-            }
-            throw new Error("Email or password is incorrect")
-          }
-
-          const responseData = await response.json()
-
-          // Check if the data is in the expected format
-          if (responseData.status === "success" && responseData.data) {
-            setUserData(responseData.data)
-          } else {
-            throw new Error("Invalid response format")
-          }
-        } catch (err) {
-          // Try to use cached user data if available
-          const cachedUserData = localStorage.getItem("userData")
-          if (cachedUserData) {
-            try {
-              const parsedData = JSON.parse(cachedUserData)
-              setUserData({
-                email: parsedData.email,
-                apiKey: parsedData.apiKey,
-                subscriptionTier: parsedData.subscriptionTier,
-                requestsRemaining: parsedData.requestsRemaining,
-              })
-              setError("Using cached data. Some information may not be up to date.")
-            } catch (parseError) {
-              setError(err instanceof Error ? err.message : "An error occurred")
-            }
-          } else {
-            setError(err instanceof Error ? err.message : "An error occurred")
-          }
-        } finally {
-          setIsLoading(false)
-        }
+        throw new Error('Failed to fetch user data')
       }
 
-      fetchUserData()
+      const data = await response.json()
+      setUserData(data.data)
+      localStorage.setItem("userData", JSON.stringify(data.data))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsLoading(false)
     }
-  }, [router])
+  }
+
+  useEffect(() => {
+    // This ensures the code only runs on the client side
+    if (typeof window !== "undefined") {
+      fetchUserData()
+
+      // Initialize Pusher
+      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
+        cluster: 'us2'
+      })
+
+      // Subscribe to the user subscription channel
+      const channel = pusher.subscribe('user-subscription-channel')
+
+      // Listen for new subscription events
+      channel.bind('new-subscription', async (data: { userId: string }) => {
+        // Get the current user's ID from localStorage
+        const storedUserData = localStorage.getItem("userData")
+        if (storedUserData) {
+          const currentUser = JSON.parse(storedUserData)
+          // If the event is for the current user, update their data
+          if (currentUser._id === data.userId) {
+            await fetchUserData()
+          }
+        }
+      })
+
+      // Cleanup on unmount
+      return () => {
+        channel.unbind_all()
+        channel.unsubscribe()
+        pusher.disconnect()
+      }
+    }
+  }, [])
 
   const copyApiKey = () => {
     if (typeof window !== "undefined" && userData?.apiKey) {
