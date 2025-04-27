@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Copy, Eye, EyeOff, User, Key, Package, BarChart3, Check } from "lucide-react"
 import { API_ENDPOINTS } from "@/config/api"
 import Pusher from 'pusher-js'
+import toast from 'react-hot-toast'
 
 interface UserData {
   email: string
@@ -76,13 +77,17 @@ export default function Dashboard() {
       channel.bind('new-subscription', async (data: { userId: string }) => {
         // Get the current user's ID from localStorage
         const storedUserData = localStorage.getItem("userData")
-        console.log("new-subscription event received", data)
-        console.log("storedUserData", storedUserData)
         if (storedUserData) {
           const currentUser = JSON.parse(storedUserData)
           // If the event is for the current user, update their data
           if (currentUser.id === data.userId) {
             await fetchUserData()
+            toast.success('Subscription updated 🎉', {
+              style: {
+                background: '#10B981',
+                color: '#fff',
+              },
+            })
           }
         }
       })
