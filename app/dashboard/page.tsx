@@ -81,7 +81,7 @@ export default function Dashboard() {
         if (storedUserData) {
           const currentUser = JSON.parse(storedUserData)
           // If the event is for the current user, update their data
-          if (currentUser._id === data.userId) {
+          if (currentUser.id === data.userId) {
             await fetchUserData()
           }
         }
