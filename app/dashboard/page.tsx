@@ -87,6 +87,7 @@ export default function Dashboard() {
                 background: '#10B981',
                 color: '#fff',
               },
+              duration: 5000
             })
           }
         }
