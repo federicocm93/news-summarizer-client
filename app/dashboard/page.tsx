@@ -342,7 +342,8 @@ export default function Dashboard() {
               <ol className="list-decimal list-inside text-sm text-blue-700 mb-4 space-y-2">
                 <li>Click the TLDR News extension icon in your browser toolbar</li>
                 <li>Go to "Settings"</li>
-                <li>Paste your API key in the input field as shown below:</li>
+                <li>Paste your API key in the input field as shown below</li>
+                <li>That's it! You're all set 🎉 Now just visit your favorite news site, open any article, and click the "Summarize article" button to get instant AI-powered summaries</li>
               </ol>
               <div className="bg-blue-100 rounded-lg border border-blue-200 p-4 mb-4">
                 <img 
