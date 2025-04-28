@@ -247,7 +247,7 @@ export default function Dashboard() {
         )}
 
         {userData && userData.subscriptionTier === "free" && (
-          <div className="bg-gradient-to-r from-[#0a1e3b] to-[#152d4a] rounded-lg p-6 text-white">
+          <div className="bg-gradient-to-r from-[#0a1e3b] to-[#152d4a] rounded-lg p-6 text-white mb-8">
             <h2 className="text-xl font-bold mb-2">Upgrade Your Plan</h2>
             <p className="mb-4 opacity-90">
               Get more article summaries and advanced features by upgrading to Premium or Pro.
