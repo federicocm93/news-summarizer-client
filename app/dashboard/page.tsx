@@ -269,7 +269,7 @@ export default function Dashboard() {
               <div className="bg-blue-50 p-2 rounded-full">
                 <Package className="h-5 w-5 text-blue-600" />
               </div>
-              <h2 className="text-lg font-semibold text-[#0a1e3b]">Install Chrome Extension</h2>
+              <h2 className="text-lg font-semibold text-[#0a1e3b]">Set Up Your Chrome Extension</h2>
             </div>
 
             <div className="mb-6">
