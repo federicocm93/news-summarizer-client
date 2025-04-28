@@ -330,6 +330,35 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+
+        {userData && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-blue-50 p-2 rounded-full">
+                <Package className="h-5 w-5 text-blue-600" />
+              </div>
+              <h2 className="text-lg font-semibold text-[#0a1e3b]">Install Chrome Extension</h2>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-gray-600 text-sm mb-4">
+                Get started by installing our Chrome extension to summarize articles directly from your browser.
+              </p>
+
+              <a
+                href={process.env.NEXT_PUBLIC_CHROME_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 py-2 px-4 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0112 6.545h10.691A12 12 0 0012 0zM1.931 5.47A11.943 11.943 0 000 12c0 6.627 5.373 12 12 12 4.42 0 8.42-2.385 10.469-6.27l-3.953-6.848A5.454 5.454 0 0112 17.455H1.309a11.943 11.943 0 00.622-12.985zM12 24c-4.42 0-8.42-2.385-10.469-6.27l3.953-6.848A5.454 5.454 0 0112 17.455h10.691A12 12 0 0012 24z"/>
+                </svg>
+                Install Extension
+              </a>
+            </div>
+          </div>
+        )}
       </main>
 
       <footer className="border-t mt-12">
