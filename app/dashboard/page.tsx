@@ -283,7 +283,7 @@ export default function Dashboard() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 py-2 px-4 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors"
               >
-                <img src="/images/chrome-store-icon.svg" alt="Chrome Web Store" className="w-5 h-5" />
+                <img src="/images/chrome-store-icon.png" alt="Chrome Web Store" className="w-5 h-5" />
                 Go to Chrome Web Store
               </a>
             </div>
