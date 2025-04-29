@@ -12,7 +12,6 @@ export default function SuccessPage() {
   const plan = searchParams.get("plan")
 
   useEffect(() => {
-    console.log("plan", plan)
     if (plan && (plan === "premium" || plan === "pro")) {
       router.push(`/dashboard/checkout?plan=${plan}`)
     }
