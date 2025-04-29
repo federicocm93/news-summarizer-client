@@ -2,11 +2,21 @@
 
 import Link from "next/link"
 import { Check } from "lucide-react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function SuccessPage() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const action = searchParams.get("action") || "signup"
+  const plan = searchParams.get("plan")
+
+  useEffect(() => {
+    console.log("plan", plan)
+    if (plan && (plan === "premium" || plan === "pro")) {
+      router.push(`/dashboard/checkout?plan=${plan}`)
+    }
+  }, [plan, router])
 
   const title =
     action === "login"
@@ -41,12 +51,14 @@ export default function SuccessPage() {
           </div>
           <h1 className="text-2xl font-bold text-[#0a1e3b] mb-2">{title}</h1>
           <p className="text-gray-600 mb-6">{message}</p>
-          <Link
-            href="/dashboard"
-            className="inline-block py-2 px-6 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors"
-          >
-            Go to Dashboard
-          </Link>
+          {!plan && (
+            <Link
+              href="/dashboard"
+              className="inline-block py-2 px-6 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors"
+            >
+              Go to Dashboard
+            </Link>
+          )}
         </div>
       </main>
 

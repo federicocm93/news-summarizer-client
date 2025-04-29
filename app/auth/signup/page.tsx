@@ -5,11 +5,12 @@ import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { API_ENDPOINTS } from "@/config/api"
 
 export default function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
@@ -92,7 +93,8 @@ export default function SignupPage() {
         }
 
         // Account created successfully
-        router.push("/auth/success?action=signup")
+        const plan = searchParams.get("plan")
+        router.push(`/auth/success?action=signup${plan ? `&plan=${plan}` : ""}`)
       } catch (error) {
         // Handle error
         setErrors((prev) => ({
