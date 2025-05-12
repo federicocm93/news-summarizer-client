@@ -25,7 +25,7 @@ export default function CheckoutPage() {
     script.async = true
     script.onload = () => {
       // Initialize Paddle
-      window.Paddle.Environment.set("sandbox") // Change to "production" for live
+      window.Paddle.Environment.set(process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? 'sandbox' : 'production') // Change to "production" for live
       window.Paddle.Initialize({
         token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
         eventCallback: function(data: any) {
