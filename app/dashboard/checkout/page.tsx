@@ -13,6 +13,10 @@ export default function CheckoutPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const paddlePremiumMonthlyPriceId = process.env.NEXT_PUBLIC_PADDLE_PREMIUM_MONTHLY_PRICE_ID || ""
+  const paddlePremiumYearlyPriceId = process.env.NEXT_PUBLIC_PADDLE_PREMIUM_YEARLY_PRICE_ID || ""
+  const paddleProMonthlyPriceId = process.env.NEXT_PUBLIC_PADDLE_PRO_MONTHLY_PRICE_ID || ""
+  const paddleProYearlyPriceId = process.env.NEXT_PUBLIC_PADDLE_PRO_YEARLY_PRICE_ID || ""
 
   useEffect(() => {
     // Load Paddle.js
@@ -106,11 +110,24 @@ export default function CheckoutPage() {
         <div className="max-w-2xl mx-auto space-y-6">
           <div 
             className="p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-            onClick={() => openCheckout("pri_01jq25xbe2b5qvqxfn7cc1zsq0")} // Replace with your actual Paddle price ID
+            onClick={() => openCheckout(paddlePremiumMonthlyPriceId)} // Replace with your actual Paddle price ID
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-[#0a1e3b]">Premium Plan</h2>
+              <h2 className="text-xl font-bold text-[#0a1e3b]">Premium Plan monthly</h2>
               <span className="text-2xl font-bold text-[#0a1e3b]">$3.99/month</span>
+            </div>
+            <ul className="space-y-2 text-gray-600 mb-4">
+              <li>✓ 500 article summaries per month</li>
+              <li>✓ Email support</li>
+            </ul>
+          </div>
+          <div 
+            className="p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => openCheckout(paddlePremiumYearlyPriceId)} // Replace with your actual Paddle price ID
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-[#0a1e3b]">Premium Plan yearly</h2>
+              <span className="text-2xl font-bold text-[#0a1e3b]">$39.90/year</span>
             </div>
             <ul className="space-y-2 text-gray-600 mb-4">
               <li>✓ 500 article summaries per month</li>
@@ -120,11 +137,24 @@ export default function CheckoutPage() {
 
           <div 
             className="p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-            onClick={() => openCheckout("pri_01jq26fd1bshzrn3zm4cjs6mwa")} // Replace with your actual Paddle price ID
+            onClick={() => openCheckout(paddleProMonthlyPriceId)} // Replace with your actual Paddle price ID
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-[#0a1e3b]">Pro Plan</h2>
+              <h2 className="text-xl font-bold text-[#0a1e3b]">Pro Plan monthly</h2>
               <span className="text-2xl font-bold text-[#0a1e3b]">$9.99/month</span>
+            </div>
+            <ul className="space-y-2 text-gray-600 mb-4">
+              <li>✓ 5000 article summaries per month</li>
+              <li>✓ Priority support</li>
+            </ul>
+          </div>
+          <div 
+            className="p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => openCheckout(paddleProYearlyPriceId)} // Replace with your actual Paddle price ID
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-[#0a1e3b]">Pro Plan yearly</h2>
+              <span className="text-2xl font-bold text-[#0a1e3b]">$99.90/year</span>
             </div>
             <ul className="space-y-2 text-gray-600 mb-4">
               <li>✓ 5000 article summaries per month</li>
