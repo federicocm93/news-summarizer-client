@@ -347,8 +347,8 @@ export default function Dashboard() {
               </ol>
               <div className="bg-blue-100 rounded-lg border border-blue-200 p-4 mb-4">
                 <img 
-                  src="/images/api-key-example.png" 
-                  alt="API Key Input Screenshot" 
+                  src="/TLDR News-instructions.gif" 
+                  alt="API Key Input Instructions GIF" 
                   className="w-full max-w-[300px] mx-auto rounded-lg shadow-sm"
                 />
               </div>
