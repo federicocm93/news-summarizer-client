@@ -349,7 +349,7 @@ export default function Dashboard() {
                 <img 
                   src="/TLDR News-instructions.gif" 
                   alt="API Key Input Instructions GIF" 
-                  className="w-full max-w-[300px] mx-auto rounded-lg shadow-sm"
+                  className="w-full max-w-[900px] mx-auto rounded-lg shadow-sm"
                 />
               </div>
               <p className="text-xs text-blue-600">
