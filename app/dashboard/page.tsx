@@ -24,6 +24,7 @@ export default function Dashboard() {
   const [showApiKey, setShowApiKey] = useState(false)
   const [copied, setCopied] = useState(false)
   const [isPaddleLoaded, setIsPaddleLoaded] = useState(false)
+  const [showCancelModal, setShowCancelModal] = useState(false)
 
   const fetchUserData = async () => {
     setIsLoading(true)
@@ -405,18 +406,6 @@ export default function Dashboard() {
             </div>
           </div>
         )}
-        {/* Cancel Subscription Button for non-free users with a subscriptionExternalId */}
-        {userData && userData.subscriptionTier !== 'free' && userData.subscriptionExternalId && (
-          <div className="w-full flex justify-center mt-6">
-            <button
-              onClick={handleCancelSubscription}
-              className="inline-block py-2 px-6 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors mb-4"
-              disabled={!isPaddleLoaded}
-            >
-              Cancel Subscription
-            </button>
-          </div>
-        )}
       </main>
 
       {/* Support Section */}
@@ -433,6 +422,46 @@ export default function Dashboard() {
             Contact Support
           </a>
         </div>
+
+        {/* Cancel Subscription Button for non-free users with a subscriptionExternalId */}
+        {userData && userData.subscriptionTier !== 'free' && userData.subscriptionExternalId && (
+          <div className="w-full flex justify-center mt-2">
+            <button
+              onClick={() => setShowCancelModal(true)}
+              className="inline-block py-2 px-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-md transition-colors mb-4 border border-gray-300"
+              disabled={!isPaddleLoaded}
+            >
+              Cancel Subscription
+            </button>
+          </div>
+        )}
+
+        {/* Cancel Subscription Confirmation Modal */}
+        {showCancelModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
+              <h3 className="text-lg font-semibold mb-4 text-[#0a1e3b]">Are you sure you want to cancel your TLDR News subscription?</h3>
+              <div className="flex justify-center gap-4 mt-6">
+                <button
+                  onClick={() => setShowCancelModal(false)}
+                  className="py-2 px-6 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md font-medium border border-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    setShowCancelModal(false)
+                    await handleCancelSubscription()
+                  }}
+                  className="py-2 px-6 bg-[#0a1e3b] hover:bg-[#152d4a] text-white rounded-md font-medium"
+                  disabled={!isPaddleLoaded}
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <footer className="border-t mt-12">
