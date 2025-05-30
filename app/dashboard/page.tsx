@@ -412,22 +412,23 @@ export default function Dashboard() {
                 Your API key is stored locally and securely in your browser.
               </p>
             </div>
+            {/* Cancel Subscription Button for non-free users with a subscriptionExternalId */}
+            {userData && userData.subscriptionTier !== 'free' && userData.subscriptionExternalId && (
+              <div className="w-full flex justify-center mt-6">
+                <button
+                  onClick={handleCancelSubscription}
+                  className="inline-block py-2 px-6 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors mb-4"
+                  disabled={!isPaddleLoaded}
+                >
+                  Cancel Subscription
+                </button>
+              </div>
+            )}
           </div>
         )}
       </main>
 
       <footer className="border-t mt-12">
-        {userData && userData.subscriptionTier !== 'free' && userData.subscriptionExternalId && (
-          <div className="container mx-auto px-4 py-6 text-center">
-            <button
-              onClick={handleCancelSubscription}
-              className="inline-block py-2 px-6 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors mb-4"
-              disabled={!isPaddleLoaded}
-            >
-              Cancel Subscription
-            </button>
-          </div>
-        )}
         <div className="container mx-auto px-4 py-6 text-center text-[#0a1e3b] text-sm">
           <p>© {new Date().getFullYear()} TLDR News. All rights reserved.</p>
         </div>
