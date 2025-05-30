@@ -164,29 +164,23 @@ export default function Dashboard() {
   }
 
   const handleCancelSubscription = async () => {
-    if (!isPaddleLoaded) {
-      toast.error('Paddle is still loading. Please try again in a moment.')
-      return
-    }
     try {
-      console.log('Paddle loaded:', isPaddleLoaded);
-      console.log('window.Paddle:', window.Paddle);
-      console.log('userData.email:', userData?.email);
-      const email = userData?.email
-      if (!email) {
-        toast.error('User email not found.')
-        return
-      }
-      await window.Paddle.CustomerPortal.open({
-        customer: { email },
-        settings: {
-          theme: 'light',
-          locale: 'en',
-          displayMode: 'overlay',
+      const token = localStorage.getItem('authToken');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/auth/customer-portal-link`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-      })
+      });
+      const data = await res.json();
+      if (data && data.status === 'success' && data.url) {
+        window.open(data.url, '_blank');
+      } else {
+        toast.error('Failed to get customer portal link.');
+      }
     } catch (err) {
-      toast.error('Failed to open subscription management. Please try again.')
+      toast.error('Failed to open subscription management. Please try again.');
     }
   }
 
