@@ -346,10 +346,13 @@ export default function Dashboard() {
                 <li>That's it! You're all set 🎉 Now just visit your favorite news site, open any article, and click the "Summarize article" button to get instant AI-powered summaries</li>
               </ol>
               <div className="bg-blue-100 rounded-lg border border-blue-200 p-4 mb-4">
-                <img 
-                  src="/TLDR News-instructions.gif" 
-                  alt="API Key Input Instructions GIF" 
+                <video
+                  src="/TLDR News-tutorial.mp4"
                   className="w-full max-w-[900px] mx-auto rounded-lg shadow-sm"
+                  controls
+                  autoPlay
+                  loop
+                  muted
                 />
               </div>
               <p className="text-xs text-blue-600">
