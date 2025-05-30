@@ -419,6 +419,20 @@ export default function Dashboard() {
         )}
       </main>
 
+      {/* Support Section */}
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6 text-[#0a1e3b] text-center mb-8">
+          <h2 className="text-xl font-bold mb-2">Need Help?</h2>
+          <p className="mb-4 opacity-90">If you have any questions, issues, or feedback, our support team is here to help you.</p>
+          <a
+            href="mailto:un.papelitoblanco@gmail.com"
+            className="inline-block py-2 px-6 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors"
+          >
+            Contact Support
+          </a>
+        </div>
+      </div>
+
       <footer className="border-t mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-[#0a1e3b] text-sm">
           <p>© {new Date().getFullYear()} TLDR News. All rights reserved.</p>
