@@ -425,7 +425,9 @@ export default function Dashboard() {
           <h2 className="text-xl font-bold mb-2">Need Help?</h2>
           <p className="mb-4 opacity-90">If you have any questions, issues, or feedback, our support team is here to help you.</p>
           <a
-            href="mailto:un.papelitoblanco@gmail.com"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=un.papelitoblanco@gmail.com&su=Support%20Request"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block py-2 px-6 bg-[#0a1e3b] hover:bg-[#152d4a] text-white font-medium rounded-md transition-colors"
           >
             Contact Support
