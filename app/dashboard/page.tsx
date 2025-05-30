@@ -169,27 +169,21 @@ export default function Dashboard() {
       return
     }
     try {
-      if (!userData?.subscriptionExternalId) {
-        toast.error('No subscription found to cancel.')
+      const email = userData?.email
+      if (!email) {
+        toast.error('User email not found.')
         return
       }
-      await window.Paddle.Retain.initCancellationFlow({
-        subscriptionId: userData.subscriptionExternalId
-      })
-      .then((result: any) => {
-        if (result.status === 'retained' || result.status === 'aborted') {
-          toast.success('You have been retained! Your subscription was not cancelled.')
-        } else if (result.status === 'error') {
-          toast.error('There was a problem starting the cancellation flow.')
-        } else {
-          toast.success('Your subscription has been cancelled.')
-        }
-      })
-      .catch((error: any) => {
-        toast.error('Failed to start the cancellation flow.')
+      await window.Paddle.CustomerPortal.open({
+        customer: { email },
+        settings: {
+          theme: 'light',
+          locale: 'en',
+          displayMode: 'overlay',
+        },
       })
     } catch (err) {
-      toast.error('Failed to open cancellation flow. Please try again.')
+      toast.error('Failed to open subscription management. Please try again.')
     }
   }
 
