@@ -169,6 +169,9 @@ export default function Dashboard() {
       return
     }
     try {
+      console.log('Paddle loaded:', isPaddleLoaded);
+      console.log('window.Paddle:', window.Paddle);
+      console.log('userData.email:', userData?.email);
       const email = userData?.email
       if (!email) {
         toast.error('User email not found.')
