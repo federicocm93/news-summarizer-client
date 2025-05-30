@@ -13,6 +13,7 @@ interface UserData {
   apiKey: string
   subscriptionTier: "free" | "premium" | "pro"
   requestsRemaining: number
+  subscriptionExternalId?: string
 }
 
 export default function Dashboard() {
@@ -22,6 +23,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null)
   const [showApiKey, setShowApiKey] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [isPaddleLoaded, setIsPaddleLoaded] = useState(false)
 
   const fetchUserData = async () => {
     setIsLoading(true)
@@ -103,6 +105,27 @@ export default function Dashboard() {
     }
   }, [])
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.Paddle) {
+      const script = document.createElement('script')
+      script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js'
+      script.async = true
+      script.onload = () => {
+        window.Paddle.Environment.set(process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? 'sandbox' : 'production')
+        window.Paddle.Initialize({
+          token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+        })
+        setIsPaddleLoaded(true)
+      }
+      document.head.appendChild(script)
+      return () => {
+        document.head.removeChild(script)
+      }
+    } else if (window.Paddle) {
+      setIsPaddleLoaded(true)
+    }
+  }, [])
+
   const copyApiKey = () => {
     if (typeof window !== "undefined" && userData?.apiKey) {
       navigator.clipboard.writeText(userData.apiKey)
@@ -137,6 +160,36 @@ export default function Dashboard() {
         return "Pro"
       default:
         return "Free"
+    }
+  }
+
+  const handleCancelSubscription = async () => {
+    if (!isPaddleLoaded) {
+      toast.error('Paddle is still loading. Please try again in a moment.')
+      return
+    }
+    try {
+      if (!userData?.subscriptionExternalId) {
+        toast.error('No subscription found to cancel.')
+        return
+      }
+      await window.Paddle.Retain.initCancellationFlow({
+        subscriptionId: userData.subscriptionExternalId
+      })
+      .then((result: any) => {
+        if (result.status === 'retained' || result.status === 'aborted') {
+          toast.success('You have been retained! Your subscription was not cancelled.')
+        } else if (result.status === 'error') {
+          toast.error('There was a problem starting the cancellation flow.')
+        } else {
+          toast.success('Your subscription has been cancelled.')
+        }
+      })
+      .catch((error: any) => {
+        toast.error('Failed to start the cancellation flow.')
+      })
+    } catch (err) {
+      toast.error('Failed to open cancellation flow. Please try again.')
     }
   }
 
@@ -364,6 +417,17 @@ export default function Dashboard() {
       </main>
 
       <footer className="border-t mt-12">
+        {userData && userData.subscriptionTier !== 'free' && userData.subscriptionExternalId && (
+          <div className="container mx-auto px-4 py-6 text-center">
+            <button
+              onClick={handleCancelSubscription}
+              className="inline-block py-2 px-6 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors mb-4"
+              disabled={!isPaddleLoaded}
+            >
+              Cancel Subscription
+            </button>
+          </div>
+        )}
         <div className="container mx-auto px-4 py-6 text-center text-[#0a1e3b] text-sm">
           <p>© {new Date().getFullYear()} TLDR News. All rights reserved.</p>
         </div>
