@@ -54,7 +54,7 @@ export default function HomePage() {
         <h1 className="text-6xl font-bold text-white mb-4 text-center">Get to the Point, Faster</h1>
         <div className="flex justify-center items-center rounded-xl overflow-hidden p-6">
           <video
-            className="rounded-xl max-w-xl w-full"
+            className="rounded-xl max-w-4xl w-full"
             src="/demo.mp4"
             autoPlay
             loop
