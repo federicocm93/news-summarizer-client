@@ -29,7 +29,7 @@ export default function SuccessPage() {
       ? "You have successfully logged in to your TLDR News account."
       : action === "google"
         ? "You have successfully connected your Google account to TLDR News."
-        : "Your TLDR News account has been created. You're now ready to start summarizing articles."
+        : "Your TLDR News account has been created. You're almost ready to start summarizing articles."
 
   return (
     <div className="min-h-screen bg-white">

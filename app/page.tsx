@@ -67,7 +67,7 @@ export default function HomePage() {
 
       <main className="container mx-auto px-4 py-4 max-w-5xl">
         <div className="flex flex-col items-center justify-center gap-10">
-          <h1 className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto text-center">
+          <h1 className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto text-center pt-10">
             TLDR News uses AI to instantly summarize news articles, helping you stay informed without the fluff. Choose
             the plan that works best for you.
           </h1>
