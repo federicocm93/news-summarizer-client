@@ -276,14 +276,14 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className={`rounded-lg border p-6 ${userData.requestsRemaining === 0 ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200'}`}>
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-green-50 p-2 rounded-full">
-                  <BarChart3 className="h-5 w-5 text-green-600" />
+                <div className={`p-2 rounded-full ${userData.requestsRemaining === 0 ? 'bg-red-100' : 'bg-green-50'}`}>
+                  <BarChart3 className={`h-5 w-5 ${userData.requestsRemaining === 0 ? 'text-red-600' : 'text-green-600'}`} />
                 </div>
                 <h2 className="text-lg font-semibold text-[#0a1e3b]">Usage</h2>
               </div>
-              <div className="text-gray-700">
+              <div className={userData.requestsRemaining === 0 ? 'text-red-700' : 'text-gray-700'}>
                 <span className="font-medium">
                   {userData.requestsRemaining !== undefined ? userData.requestsRemaining : 0}
                 </span>{" "}
