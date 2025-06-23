@@ -114,7 +114,7 @@ export default function CheckoutPage() {
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-[#0a1e3b]">Premium Plan monthly</h2>
-              <span className="text-2xl font-bold text-[#0a1e3b]">$3.99/month</span>
+              <span className="text-2xl font-bold text-[#0a1e3b]">$1.99/month</span>
             </div>
             <ul className="space-y-2 text-gray-600 mb-4">
               <li>✓ 500 article summaries per month</li>
@@ -127,7 +127,7 @@ export default function CheckoutPage() {
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-[#0a1e3b]">Premium Plan yearly</h2>
-              <span className="text-2xl font-bold text-[#0a1e3b]">$39.90/year</span>
+              <span className="text-2xl font-bold text-[#0a1e3b]">$19.90/year</span>
             </div>
             <ul className="space-y-2 text-gray-600 mb-4">
               <li>✓ 500 article summaries per month</li>

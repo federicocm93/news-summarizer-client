@@ -86,7 +86,7 @@ export default function HomePage() {
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
                     <Check className="h-5 w-5 text-[#ff5533] flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">50 article summaries total</span>
+                    <span className="text-gray-700">30 article summaries per month</span>
                   </li>
                 </ul>
               </div>
@@ -108,7 +108,7 @@ export default function HomePage() {
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-[#0a1e3b] mb-2">Premium</h2>
                 <div className="flex items-end gap-1 mb-1">
-                  <span className="text-3xl font-bold text-[#0a1e3b]">$3.99</span>
+                  <span className="text-3xl font-bold text-[#0a1e3b]">$1.99</span>
                   <span className="text-gray-500 mb-1">/month</span>
                 </div>
                 <p className="text-sm text-gray-500">Perfect for regular readers</p>

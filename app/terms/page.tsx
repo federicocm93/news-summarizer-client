@@ -63,8 +63,8 @@ export default function TermsAndConditions() {
               TLDR News offers various subscription plans with different features and usage limits:
             </p>
             <ul className="list-disc pl-6 space-y-1 text-gray-700">
-              <li>Free Trial: Limited to 50 article summaries in total.</li>
-              <li>Premium: Provides 500 article summaries per month for $3.99/month.</li>
+              <li>Free Trial: Limited to 30 article summaries per month.</li>
+              <li>Premium: Provides 500 article summaries per month for $1.99/month.</li>
               <li>Pro: Provides 5000 article summaries per month for $9.99/month.</li>
             </ul>
             <p className="text-gray-700 leading-relaxed mt-3">
