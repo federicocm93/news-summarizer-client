@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [copied, setCopied] = useState(false)
   const [isPaddleLoaded, setIsPaddleLoaded] = useState(false)
   const [showCancelModal, setShowCancelModal] = useState(false)
+  const [showNoRequestsModal, setShowNoRequestsModal] = useState(false)
 
   const fetchUserData = async () => {
     setIsLoading(true)
@@ -56,6 +57,14 @@ export default function Dashboard() {
       const data = await response.json()
       setUserData(data.data)
       localStorage.setItem("userData", JSON.stringify(data.data))
+      
+      // Show modal if user has no requests remaining (only if not dismissed in this session)
+      if (data.data.requestsRemaining === 0) {
+        const modalDismissed = sessionStorage.getItem('noRequestsModalDismissed')
+        if (!modalDismissed) {
+          setShowNoRequestsModal(true)
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -459,6 +468,84 @@ export default function Dashboard() {
                   Confirm
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* No Requests Remaining Modal */}
+        {showNoRequestsModal && userData && userData.requestsRemaining === 0 && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 text-center relative overflow-hidden">
+              {/* Background decoration */}
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#ff5533] to-[#ff7a33]"></div>
+              
+              {/* Icon */}
+              <div className="mb-6">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-br from-[#ff5533] to-[#ff7a33] rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Content */}
+              <h3 className="text-2xl font-bold mb-4 text-[#0a1e3b]">
+                🚀 Ready for More Summaries?
+              </h3>
+              
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                You've used all your free requests! Don't wait for them to reset next month. 
+                <span className="font-semibold text-[#0a1e3b]"> Upgrade now</span> and keep enjoying instant AI-powered summaries without limits.
+              </p>
+
+              {/* Benefits */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                <h4 className="font-semibold text-[#0a1e3b] mb-3 text-center">✨ What you'll get:</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center">
+                    <span className="text-green-500 mr-2">✓</span>
+                    <span><strong>500+ summaries</strong> per month (Premium)</span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="text-green-500 mr-2">✓</span>
+                    <span><strong>5000+ summaries</strong> per month (Pro)</span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="text-green-500 mr-2">✓</span>
+                    <span>Priority support & faster processing</span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="text-green-500 mr-2">✓</span>
+                    <span>Cancel anytime, no strings attached</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/dashboard/checkout"
+                  onClick={() => setShowNoRequestsModal(false)}
+                  className="w-full py-3 px-6 bg-gradient-to-r from-[#ff5533] to-[#ff7a33] hover:from-[#e64a2e] hover:to-[#e66a2e] text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                >
+                  🎯 Upgrade Now & Keep Reading!
+                </Link>
+                
+                <button
+                  onClick={() => {
+                    setShowNoRequestsModal(false)
+                    sessionStorage.setItem('noRequestsModalDismissed', 'true')
+                  }}
+                  className="w-full py-2 px-6 text-gray-500 hover:text-gray-700 font-medium transition-colors"
+                >
+                  Maybe later
+                </button>
+              </div>
+
+              {/* Small print */}
+              <p className="text-xs text-gray-400 mt-4">
+                Free tier resets monthly • Upgrade for instant access
+              </p>
             </div>
           </div>
         )}
